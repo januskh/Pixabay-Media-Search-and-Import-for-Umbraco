@@ -1,0 +1,43 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 15
+VisualStudioVersion = 15.0.27130.2027
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Our.Umbraco.Pixabay", "Umbraco.Pixabay\Our.Umbraco.Pixabay.csproj", "{2A453B6E-E7B2-4FA3-B05C-6C0AC9DF5B62}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Umbraco781", "Umbraco781\Umbraco781.csproj", "{42C81E3F-D6EA-41EF-8614-C94BF335DEA4}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{2A453B6E-E7B2-4FA3-B05C-6C0AC9DF5B62}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2A453B6E-E7B2-4FA3-B05C-6C0AC9DF5B62}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2A453B6E-E7B2-4FA3-B05C-6C0AC9DF5B62}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2A453B6E-E7B2-4FA3-B05C-6C0AC9DF5B62}.Release|Any CPU.Build.0 = Release|Any CPU
+		{42C81E3F-D6EA-41EF-8614-C94BF335DEA4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{42C81E3F-D6EA-41EF-8614-C94BF335DEA4}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{42C81E3F-D6EA-41EF-8614-C94BF335DEA4}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{42C81E3F-D6EA-41EF-8614-C94BF335DEA4}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {90C196F6-C539-414B-820B-6D0FF2FEBC11}
+	EndGlobalSection
+	GlobalSection(TeamFoundationVersionControl) = preSolution
+		SccNumberOfProjects = 3
+		SccEnterpriseProvider = {4CA58AB2-18FA-4F8D-95D4-32DDF27D184C}
+		SccTeamFoundationServer = https://januskh.visualstudio.com/
+		SccLocalPath0 = .
+		SccProjectUniqueName1 = Umbraco781\\Umbraco781.csproj
+		SccProjectName1 = Umbraco781
+		SccLocalPath1 = Umbraco781
+		SccProjectUniqueName2 = Umbraco.Pixabay\\Our.Umbraco.Pixabay.csproj
+		SccProjectName2 = Umbraco.Pixabay
+		SccLocalPath2 = Umbraco.Pixabay
+	EndGlobalSection
+EndGlobal

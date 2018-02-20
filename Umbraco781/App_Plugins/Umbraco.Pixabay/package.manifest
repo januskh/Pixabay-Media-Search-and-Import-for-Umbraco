@@ -1,0 +1,17 @@
+{ 
+   propertyEditors: [{ 
+     alias: "Umbraco.Pixabay", 
+     name: "Umbraco Pixabay Plugin", 
+     editor: { 
+       view: "~/App_Plugins/Umbraco.Pixabay/views/default.html", 
+       hideLabel: false 
+     } 
+  }], 
+  javascript: [ 
+    "~/App_Plugins/Umbraco.Pixabay/controllers/Umbraco.Pixabay.controller.js" 
+  ], 
+  css: [ 
+	"~/App_Plugins/Umbraco.Pixabay/styles/styles.css",
+	"~/App_Plugins/Umbraco.Pixabay/styles/bootstrap-grid.min.css"
+	]  
+} 

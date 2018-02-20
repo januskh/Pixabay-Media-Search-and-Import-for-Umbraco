@@ -1,0 +1,298 @@
+﻿<div class="UmbracoPixabayPropertyEditors" ng-controller="Umbraco.Pixabay.Controller">
+    <div ng-show="!showSettings()">
+        <div class="" ng-include="'menu.html'" ng-if="isAnythingSelected()"></div>
+
+        <div class="umb-package-details__section">
+            <i class="icon-umb-developer pull-right" ng-click="toogleSettings()"> </i>
+            <div>
+                <label>Search:</label>
+                <input type="radio" name="searchfor" id="rbImages" ng-model="searchMode" ng-click="setSearchMode(0)" ng-checked="(searchMode == 0)" no-Dirty-Check/><label for="rbImages">Images</label>
+                <input type="radio" name="searchfor" id="rbVideos" ng-model="searchMode" ng-click="setSearchMode(1)" ng-checked="(searchMode == 1)" no-Dirty-Check/><label for="rbVideos">Videos</label>
+            </div>
+            <div>
+                <input type="text" placeholder="Search for eg. yellow flower" ng-model="searchTerm" ng-keyup="searchKeyUp()" class="search-field" no-Dirty-Check/> <input type="button" class="btn btn-success search-button" value="Search" ng-click="search()" />
+            </div>
+            <small><a class="advanced-option-toggle" ng-click="toogleAdvancedOptions()">Avanced options</a></small>
+
+            <div class="umb-box" ng-show="advancedOptionsVisible">
+                <div class="container">
+                    <div class="row">
+
+                        <div class="col-md-5">
+                            <table>
+                                <tr>
+                                    <td><label class="advanced-option-label">Category:</label></td>
+                                    <td>
+                                        <select ng-model="category" no-Dirty-Check>
+                                            <option value="{{cate}}" ng-selected="category == cate" ng-repeat="cate in availableOptions.Category">{{cate}}</option>
+                                        </select>
+                                    </td>
+                                </tr>
+                                <tr ng-show="searchMode == 0">
+                                    <td><label class="advanced-option-label">Image types:</label></td>
+                                    <td>
+                                        <select ng-model="imageType" no-Dirty-Check>
+                                            <option value="{{imgt}}" ng-selected="imageType == imgt" ng-repeat="imgt in availableOptions.ImageType">{{imgt}}</option>
+                                        </select>
+                                    </td>
+                                </tr>
+                                <tr ng-show="searchMode == 1">
+                                    <td><label class="advanced-option-label">Video Type:</label></td>
+                                    <td>
+                                        <select ng-model="videoType" no-Dirty-Check>
+                                            <option value="{{vidt}}" ng-selected="videoType == vidt" ng-repeat="vidt in availableOptions.VideoType">{{vidt}}</option>
+                                        </select>
+                                    </td>
+                                </tr>
+                                <tr ng-show="searchMode == 0">
+                                    <td><label class="advanced-option-label">Orientation:</label></td>
+                                    <td>
+                                        <select ng-model="orientation" no-Dirty-Check>
+                                            <option value="{{orie}}" ng-selected="orientation == orie" ng-repeat="orie in availableOptions.Orientation">{{orie}}</option>
+                                        </select>
+                                    </td>
+                                </tr>
+
+
+                            </table>
+                        </div>
+
+                        <div class="col-md-3">
+
+                            <table>
+                                <tr>
+                                    <td><input type="checkbox" id="chkEditorsChoice" ng-model="editorsChoice" no-Dirty-Check /></td>
+                                    <td><label class="advanced-option-label" for="chkEditorsChoice">Editors Choice <small>Select images that have received an Editor's Choice award.</small></label></td>
+                                </tr>
+                                <tr>
+                                    <td><input type="checkbox" id="chkSafeSearch" ng-model="safeSearch" no-Dirty-Check /></td>
+                                    <td><label class="advanced-option-label" for="chkSafeSearch">Safe <small>A flag indicating that only images suitable for all ages should be returned.</small></label></td>
+                                </tr>
+                            </table>
+
+                        </div>
+
+                        <div class="col-md-4">
+
+                            <table>
+                                <tr>
+                                    <td><label class="advanced-option-label">Min Width:</label></td>
+                                    <td><input type="number" ng-model="minWidth" no-Dirty-Check /></td>
+                                </tr>
+                                <tr>
+                                    <td><label class="advanced-option-label">Min Height:</label></td>
+                                    <td><input type="number" ng-model="minHeight" no-Dirty-Check /></td>
+                                </tr>
+                            </table>
+
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+        <div class="" ng-include="'pager.html'"></div>
+
+
+        <div class="pixabay-logo" ng-if="data == null" onclick="window.open('http://www.pixabay.com')">
+
+        </div>
+
+
+        <div data-element="media-grid" class="umb-media-grid" items="vm.itemsWithoutFolders" on-details-hover="vm.hoverMediaItemDetails" on-click="vm.selectItem" on-click-name="vm.goToItem" ng-show="!loading">
+            <div data-element="media-grid-item-0" class="umb-media-grid__item" title=""
+                 ng-click="clickItem(item, $event, $index)" ng-repeat="item in data.hits" ng-class="{'-selected': isSelected(item), '-file': !item.thumbnail, '-svg': item.extension == 'svg'}"
+                 style="flex: 1 1 200px; max-width: 200px; min-width: 125px; min-height: 125px;">
+                <div>
+                    <i ng-show="isSelected(item)" class="icon-check umb-media-grid__checkmark" style="display: none;"></i>
+
+                    <div data-element="media-grid-item-edit" class="umb-media-grid__item-overlay" ng-class="{'-locked': isSelected(item) }" ng-click="clickItemName(item, $event, $index)">
+                        <!-- ngIf: onDetailsHover --><i ng-if="onDetailsHover" class="icon-info umb-media-grid__info" ng-mouseover="hoverItemDetails(item, $event, true)" ng-mouseleave="hoverItemDetails(item, $event, false)"></i>
+                        <div class="umb-media-grid__item-name ng-binding">Tags: {{item.tags}}</div>
+                    </div>
+
+                    <img class="umb-media-grid__item-image" width="200" height="200"
+                         alt="" draggable="false" src="{{item.previewURL}}">
+                </div>
+            </div>
+        </div>
+
+        <div ng-if="data != null && data.hits.length == 0" >No records was found.</div>
+
+        <div class="" ng-include="'pager.html'"></div>
+
+        <div class="" ng-include="'importconfirm.html'" ng-if="readyForImport()"></div>
+
+        <ul class="umb-load-indicator animated -half-second" ng-show="loading">
+            <li class="umb-load-indicator__bubble"></li>
+            <li class="umb-load-indicator__bubble"></li>
+            <li class="umb-load-indicator__bubble"></li>
+        </ul>
+
+    </div>
+
+    <div ng-show="showSettings()">
+
+
+        <div class="umb-package-details__section">
+            <i class="icon-umb-developer pull-right" ng-click="toogleSettings()"> </i>
+            <h5>Settings</h5>
+            <div class="pull-right">
+                <a href="https://pixabay.com/" style="margin:3px 15px 5px 0;font-size:12px;line-height:1.7;color:#555;display:block;float:left;padding:9px 12px 6px;border:1px solid #ccc" target="_blank">
+                    <i style="display:block;width:68px;height:18px;overflow:hidden"><img src="https://pixabay.com/static/img/logo.svg" style="width:94px"></i> Free Images
+                </a>
+            </div>
+            <div >
+
+                <ul>
+                    <li>
+                        Start up by registering on Pixabay:<br />
+                        <a href="https://pixabay.com/da/accounts/register/" target="_blank">https://pixabay.com/da/accounts/register/</a>
+                    </li>
+                    <li>
+                        Activate your account using the activation link recevied in your e-mail.
+                    </li>
+                    <li>
+                        Login and go to this page:<br />
+                        <a href="https://pixabay.com/api/docs/" target="_blank">https://pixabay.com/api/docs/</a>
+
+                    </li>
+                    <li>
+                        Search for the key. It's located in the parameters-table.<br />
+                        Key (required): 8070652-c65c9e914ebbd64c9e4464431<br />
+                        <small>Tip: It's highlighted in a green bagde</small>
+                    </li>
+                    <li>
+                        Paste the key in the 'Api key' field below and press [Save settings].
+                    </li>
+                </ul>
+
+
+                <div>
+                    <label>Api key:</label>
+                </div>
+                <div>
+                    <input type="text" placeholder="Pixabay Api Key" ng-model="pendingSettings.apiKey" />
+                </div>
+            </div>
+
+
+            <div>
+                <input type="button" class="btn btn-success search-button" value="Save settings" ng-click="saveSettings()" />
+
+            </div>
+
+        </div>
+
+
+    </div>
+
+</div>
+
+<script type="text/ng-template" id="pager.html">
+    <div ng-show="data != null && data.hits.length > 0 && !loading">
+        <table class="table-paging">
+            <tr>
+                <td style="width: 30%;"><label><a ng-if="pageNo > 1" ng-click="prevPage()">« Previous page</a></label>&nbsp;</td>
+                <td class="align-center"><label>Showing {{(data.hits.length * (pageNo -1))+1 }} -> {{data.hits.length * pageNo}} of {{data.totalHits}} - Page: {{pageNo}} </label></td>
+                <td style="width: 30%;" class="align-right"><label><a ng-if="(data.hits.length * pageNo) < data.totalHits" ng-click="nextPage()">Next page »</a></label>&nbsp;</td>
+            </tr>
+        </table>
+    </div>
+</script>
+
+<script type="text/ng-template" id="menu.html">
+
+    <div class="umb-editor-sub-header" scrollable-container=".umb-editor-container">
+
+
+        <div class="umb-editor-sub-header__content-left">
+
+            <div class="umb-editor-sub-header__section">
+                <div class="umb-button umb-button--block" data-element="" type="button" label="Clear selection" label-key="buttons_clearSelection" ng-click="clearSelection()" disabled="disabled">
+
+                    <div class="icon-check umb-button__success -hidden" ng-class="{'-hidden': state !== 'success', '-white': style}"></div>
+
+                    <div class="icon-delete umb-button__error -hidden" ng-class="{'-hidden': state !== 'error', '-white': style}"></div>
+
+                    <div class="umb-button__progress -hidden" ng-class="{'-hidden': state !== 'busy', '-white': style}"></div>
+
+                    <button type="button" class="btn umb-button__button  umb-button--" ng-click="action(model)" hotkey="" hotkey-when-hidden="" ng-disabled="disabled">
+                        <span class="umb-button__content">
+                            <localize key="buttons_clearSelection" class="ng-isolate-scope ng-binding">Clear selection</localize>
+                        </span>
+                    </button>
+                </div>
+            </div>
+
+            <div class="umb-editor-sub-header__section">
+                <strong ng-show="!actionInProgress" class="ng-binding">{{selectedItems.length}} <localize key="general_of" class="ng-isolate-scope">of</localize> {{data.totalHits}} <localize key="general_selected" class="ng-isolate-scope">selected</localize></strong>
+                <strong ng-show="actionInProgress" ng-bind="bulkStatus" class="ng-binding" style="display: none;"></strong>
+
+                <div class="umb-loader-wrapper -bottom" ng-show="actionInProgress" style="display: none;">
+                    <div class="umb-loader"></div>
+                </div>
+            </div>
+
+        </div>
+
+
+        <div class="umb-editor-sub-header__content-right ">
+
+            <div class="umb-editor-sub-header__section">
+
+                <div class="umb-button umb-button--block" data-element="" type="button" label="Import" icon="icon-download-alt" ng-click="transfer()" disabled="disabled">
+
+                    <div class="icon-check umb-button__success -hidden -white" ng-class="{'-hidden': state !== 'success', '-white': style}"></div>
+
+                    <div class="icon-delete umb-button__error -hidden -white" ng-class="{'-hidden': state !== 'error', '-white': style}"></div>
+
+                    <div class="umb-button__progress -hidden -white" ng-class="{'-hidden': state !== 'busy', '-white': style}"></div>
+
+                    <button type="button" class="btn umb-button__button umb-button--" ng-click="transfer()" hotkey="" hotkey-when-hidden="" ng-disabled="disabled">
+                        <span class="umb-button__content">
+                            <i ng-if="icon" class="icon-download-alt umb-button__icon"></i>
+                            Import
+                        </span>
+                    </button>
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+</script>
+
+<script type="text/ng-template" id="importconfirm.html">
+
+    <div class="umb-notifications">
+        <ul class="umb-notifications__notifications">
+
+            <li class="alert alert-block alert-form umb-notifications__notification animated -half-second fadeIn -no-border -extra-padding -no-border -extra-padding">
+
+                <a class="close -align-right" ng-click="cancelImport()" prevent-default="" href="">×</a>
+
+                <div class="ng-scope">
+                    <div>
+                        <div>
+                            <h4>Excute import</h4>
+                            <p>Do you want to import the {{}} selected file(s)?</p>
+
+                            <button class="btn" ng-click="cancelImport()">Cancel</button>
+                            <button class="btn btn-success" ng-click="confirmedImport()" umb-auto-focus>Import</button>
+                        </div>
+                    </div>
+                </div>
+
+
+            </li>
+        </ul>
+    </div>
+
+
+</script>

@@ -1,0 +1,20 @@
+
+Umbraco.Pixabay/App_Data/NuGetBackup/20180217-102959/CopyLogs/UmbracoBinBackup.log
+.vs/Umbraco781/v15/*
+packages/*
+Umbraco781/App_Data/cache/*
+Umbraco781/App_Data/Logs/*
+Umbraco781/App_Data/NuGetBackup/*
+Umbraco.Pixabay/obj/Debug/DesignTimeResolveAssemblyReferencesInput.cache
+Umbraco781/App_Data/packages/created/createdPackages.config
+Umbraco781/App_Data/TEMP/ClientDependency/*
+Umbraco781/App_Data/TEMP/ExamineIndexes/*
+Umbraco781/App_Data/TEMP/install_backup/PicabayInstaller.cs
+Umbraco781/App_Data/TEMP/DistCache/LMW3SVC2ROOT-lastsynced.txt
+Umbraco781/App_Data/TEMP/PluginCache/umbraco-plugins.JANUS.hash
+Umbraco781/App_Data/TEMP/PluginCache/umbraco-plugins.JANUS.list
+Umbraco781/App_Plugins/New Plugin.bat
+Umbraco781/bin/*
+Umbraco781/config/pixabay.config
+Umbraco781/Media/*
+Umbraco781/obj/*

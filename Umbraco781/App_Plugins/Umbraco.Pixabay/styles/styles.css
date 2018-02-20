@@ -1,0 +1,65 @@
+.search-button {
+    margin-bottom: 10px !important;
+}
+
+.search-field {
+    width: 85%;
+}
+
+.advanced-option-toggle {
+    cursor: pointer;
+}
+
+.UmbracoPixabayPropertyEditors select {
+    width: 100% !important;
+}
+
+.UmbracoPixabayPropertyEditors input[type=number] {
+    width: 100% !important;
+}
+
+.UmbracoPixabayPropertyEditors table {
+    width: 100% !important;
+    margin-top: 10px;
+    margin-bottom: 10px;
+    
+}
+
+.UmbracoPixabayPropertyEditors input[type=radio] {
+    margin-bottom: 8px;
+    margin-left: 20px;
+    margin-right: 4px;
+}
+
+.advanced-option-label {
+    font-size: 13px;
+}
+
+.align-center {
+    text-align: center;
+}
+.align-right {
+    text-align: right;
+}
+
+.icon-umb-developer {
+    cursor: pointer;
+}
+
+
+.pixabay-logo {
+    position: relative;
+}
+
+    .pixabay-logo:after {
+        content: "";
+        display: block;
+        position: absolute;
+        background-image: url(/App_Plugins/Umbraco.Pixabay/images/pixabay.png);
+        width: 100%;
+        height: 220px;
+        opacity: 0.1;
+        background-repeat: no-repeat;
+        background-position: center;
+        
+    }
