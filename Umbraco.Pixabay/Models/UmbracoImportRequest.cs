@@ -12,11 +12,25 @@ namespace Umbraco.Pixabay.Models
         [JsonProperty("mediafolder")]
         public int MediaFolder { get; set; }
 
-        [JsonProperty("idlist")]
-        public List<int> IdList { get; set; }
+        [JsonProperty("imageEntries")]
+        public List<ImageEntry> ImageEntries { get; set; }
 
         [JsonProperty("mediaType")]
         public int MediaType { get; set; }
 
     }
+
+    public class UmbracoImportVideoRequest
+    {
+        [JsonProperty("mediafolder")]
+        public int MediaFolder { get; set; }
+
+        [JsonProperty("imageEntries")]
+        public List<VideoEntry> Videos { get; set; }
+
+        [JsonProperty("mediaType")]
+        public int MediaType { get; set; }
+
+    }
+
 }

@@ -161,12 +161,12 @@ angular.module("umbraco").controller("Umbraco.Pixabay.Controller", function ($sc
 
     $scope.clickItem = function (item, evt, idx) {
         if (item !== null) {
-            if (_.contains($scope.selectedItems, item.id)) {
-                var index = $scope.selectedItems.indexOf(item.id);
+            if (_.contains($scope.selectedItems, item)) {
+                var index = $scope.selectedItems.indexOf(item);
                 $scope.selectedItems.splice(index, 1);
             }
             else {
-                $scope.selectedItems.push(item.id);
+                $scope.selectedItems.push(item);
             }
         }
     }
@@ -180,7 +180,7 @@ angular.module("umbraco").controller("Umbraco.Pixabay.Controller", function ($sc
     }
 
     $scope.isSelected = function(item) {
-        return _.contains($scope.selectedItems, item.id);
+        return _.contains($scope.selectedItems, item);
     }
 
     $scope.toogleAdvancedOptions = function () {
@@ -202,9 +202,21 @@ angular.module("umbraco").controller("Umbraco.Pixabay.Controller", function ($sc
 
     $scope.transfer = function () {
 
+
+
         $scope.userService.getCurrentUser().then(function (userData) {
+
+            var mediaStartNode = -1;
+            if (userData.startMediaIds !== null) {
+                if (Array.isArray(userData.startMediaIds)) {
+                    if (userData.startMediaIds.length > 0) {
+                        mediaStartNode = userData.startMediaIds[0];
+                    }
+                }
+            }
+
             $scope.dialogService.mediaPicker({
-                startNodeId: userData.startMediaIds.length === 0 ? -1 : userData.startMediaIds[0],
+                startNodeId: mediaStartNode,
                 callback: function (media) {
                     $scope.target.id = media.id;
                     $scope.target.isMedia = true;
@@ -212,6 +224,7 @@ angular.module("umbraco").controller("Umbraco.Pixabay.Controller", function ($sc
                     $scope.refreshUI();
                 }
             });
+
         });
 
     }
@@ -232,12 +245,19 @@ angular.module("umbraco").controller("Umbraco.Pixabay.Controller", function ($sc
         $scope.refreshUI();
     }
 
-    $scope.performImport = function (folderId, idList) {
+    $scope.performImport = function (folderId, imageEntries) {
 
         $scope.target.id = 0;
         $scope.loading = true;
+        var postUrl = '';
+        if ($scope.searchMode === 0) {
+            postUrl = '/umbraco/backoffice/api/PixabayImport/Import';
+        }
+        else {
+            postUrl = '/umbraco/backoffice/api/PixabayImport/ImportVideo';
+        }
 
-        $http.post('/umbraco/backoffice/api/PixabayImport/Import', { mediafolder: folderId, idlist: idList, mediaType: $scope.searchMode }).then(function (response) {
+        $http.post(postUrl, { mediafolder: folderId, imageEntries: imageEntries, mediaType: $scope.searchMode }).then(function (response) {
 
             $scope.importResponse = response.data;
 
@@ -252,28 +272,24 @@ angular.module("umbraco").controller("Umbraco.Pixabay.Controller", function ($sc
                         }
 
                     }
-                    else
-                    {
+                    else {
                         $scope.notificationsService.error("Import completed.", "No files was successfully imported.");
                     }
                 }
-                else
-                {
+                else {
                     $scope.notificationsService.error("Import failed.", "Inconclusive answer from server. Check media folder to see if import succeeded.");
                 }
             }
-            else
-            {
+            else {
                 $scope.notificationsService.error("Import failed.", "Inconclusive answer from server. Check media folder to see if import succeeded.");
             }
-            
+
             $scope.clearSelection();
             $scope.loading = false;
             $scope.refreshUI();
 
-          
-
         });
+
 
     }
 

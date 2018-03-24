@@ -15,7 +15,7 @@ namespace Umbraco.Pixabay.Controllers
 {
     public class PixabayImportController : UmbracoAuthorizedApiController
     {
-        //public static string ApiKey = "8070652-c65c9e408eabd62c9e8467431";
+  
         internal Models.Settings settings = null;
 
         public PixabayImportController()
@@ -31,7 +31,7 @@ namespace Umbraco.Pixabay.Controllers
 
             UmbracoImportResponse importResponse = null;
 
-            if (importRequest.IdList == null)
+            if (importRequest.ImageEntries == null)
             {
                 throw new System.ArgumentNullException("importRequest.IdList");
             }
@@ -43,113 +43,127 @@ namespace Umbraco.Pixabay.Controllers
 
             IMedia mediaFolder = Services.MediaService.GetById(importRequest.MediaFolder);
 
-            if (importRequest.MediaType == 0)
+            if (mediaFolder != null && importRequest.MediaType == 0)
             {
-                // Image import
+                // Instances new response object.
+                importResponse = new UmbracoImportResponse();
 
-                Models.ImageSearchOptions options = new Models.ImageSearchOptions()
+                foreach (ImageEntry url in importRequest.ImageEntries)
                 {
-                    ApiKey = settings.ApiKey
-                };
-                options.Id = string.Join(",", importRequest.IdList);
-                ImageSearchResult searchResult = Images.SearchWithOptions(options);
+                    var stopWatch = System.Diagnostics.Stopwatch.StartNew();
 
-                if (searchResult != null && searchResult.Images != null)
-                {
-
-                    importResponse = new UmbracoImportResponse();
-
-                    foreach (ImageEntry entry in searchResult.Images)
+                    try
                     {
-                        var stopWatch = System.Diagnostics.Stopwatch.StartNew();
-
-                        try
+                        SaveImageByUrl(url.WebformatURL, mediaFolder);
+                        stopWatch.Stop();
+                        importResponse.SuccessList.Add(new ImportEntry()
                         {
-                            SaveImageByUrl(entry, mediaFolder);
-                            stopWatch.Stop();
-                            importResponse.SuccessList.Add(new ImportEntry()
-                            {
-                                Filename = System.IO.Path.GetFileName(entry.PreviewURL),
-                                ImportTime = stopWatch.ElapsedMilliseconds
-                            });
-
-                        }
-                        catch (System.Exception ex)
-                        {
-                            stopWatch.Stop();
-                            importResponse.FailureList.Add(new ImportEntry()
-                            {
-                                Filename = System.IO.Path.GetFileName(entry.PreviewURL),
-                                ImportTime = stopWatch.ElapsedMilliseconds,
-                                Error = ex.ToString()
-                            });
-
-                        }
+                            Filename = System.IO.Path.GetFileName(url.PreviewURL),
+                            ImportTime = stopWatch.ElapsedMilliseconds
+                        });
 
                     }
+                    catch (System.Exception ex)
+                    {
+
+                        stopWatch.Stop();
+
+                        Logger.Error(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType, "Error ocurred while importing images.", ex);
+
+                        importResponse.FailureList.Add(new ImportEntry()
+                        {
+                            Filename = System.IO.Path.GetFileName(url.PreviewURL),
+                            ImportTime = stopWatch.ElapsedMilliseconds,
+                            Error = ex.ToString()
+                        });
+
+                    }
+
                 }
             }
             else
             {
-                // Video import
-                Models.VideoSearchOptions options = new Models.VideoSearchOptions()
-                {
-                    ApiKey = settings.ApiKey
-                };
-                options.Id = string.Join(",", importRequest.IdList);
-                VideoSearchResults searchResult = Videos.SearchWithOptions(options);
-
-                if (searchResult != null && searchResult.Videos != null)
-                {
-
-                    importResponse = new UmbracoImportResponse();
-
-                    foreach (VideoEntry entry in searchResult.Videos)
-                    {
-                        var stopWatch = System.Diagnostics.Stopwatch.StartNew();
-
-                        try
-                        {
-                            SaveVideoByUrl(entry, mediaFolder);
-                            stopWatch.Stop();
-                            importResponse.SuccessList.Add(new ImportEntry()
-                            {
-                                Filename = System.IO.Path.GetFileName(searchResult.Videos.First().Videos.Large.Url.Split('?')[0]),
-                                ImportTime = stopWatch.ElapsedMilliseconds
-                            });
-
-                        }
-                        catch (System.Exception ex)
-                        {
-                            stopWatch.Stop();
-                            importResponse.FailureList.Add(new ImportEntry()
-                            {
-                                Filename = System.IO.Path.GetFileName(searchResult.Videos.First().Videos.Large.Url.Split('?')[0]),
-                                ImportTime = stopWatch.ElapsedMilliseconds,
-                                Error = ex.ToString()
-                            });
-
-                        }
-
-                    }
-                }
-
+                Logger.Info(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType, $"Import could not be performed, since the selected folder doesn't exist. Requested folder id: '{importRequest.MediaFolder}'.");
             }
 
             return importResponse;
         }
 
 
-        public bool SaveImageByUrl(ImageEntry entry, IMedia mediaFolder)
+        [HttpPost]
+        public UmbracoImportResponse ImportVideo([FromBody] UmbracoImportVideoRequest importRequest)
+        {
+
+            UmbracoImportResponse importResponse = null;
+
+            if (importRequest.Videos == null)
+            {
+                throw new System.ArgumentNullException("importRequest.Videos");
+            }
+
+            if (importRequest.MediaFolder == 0)
+            {
+                throw new System.ArgumentNullException("importRequest.MediaFolder");
+            }
+
+            IMedia mediaFolder = Services.MediaService.GetById(importRequest.MediaFolder);
+
+            if (mediaFolder != null && importRequest.MediaType == 1)
+            {
+                // Instances new response object.
+                importResponse = new UmbracoImportResponse();
+
+                foreach (VideoEntry entry in importRequest.Videos)
+                {
+                    var stopWatch = System.Diagnostics.Stopwatch.StartNew();
+
+                    try
+                    {
+                        SaveVideoByUrl(entry, mediaFolder);
+                        stopWatch.Stop();
+                        importResponse.SuccessList.Add(new ImportEntry()
+                        {
+                            Filename = System.IO.Path.GetFileName(importRequest.Videos.First().Videos.Large.Url.Split('?')[0]),
+                            ImportTime = stopWatch.ElapsedMilliseconds
+                        });
+
+                    }
+                    catch (System.Exception ex)
+                    {
+                        stopWatch.Stop();
+
+                        Logger.Error(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType, "Error ocurred while importing videos.", ex);
+
+                        importResponse.FailureList.Add(new ImportEntry()
+                        {
+                            Filename = System.IO.Path.GetFileName(importRequest.Videos.First().Videos.Large.Url.Split('?')[0]),
+                            ImportTime = stopWatch.ElapsedMilliseconds,
+                            Error = ex.ToString()
+                        });
+
+                    }
+
+                }
+            }
+            else
+            {
+                Logger.Info(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType, $"Import could not be performed, since the selected folder doesn't exist. Requested folder id: '{importRequest.MediaFolder}'.");
+            }
+
+            return importResponse;
+        }
+
+
+        public bool SaveImageByUrl(string url, IMedia mediaFolder)
         {
             try
             {
-                string filename = System.IO.Path.GetFileName(entry.PreviewURL);
+                string filename = System.IO.Path.GetFileName(url);
 
                 IMedia media = Services.MediaService.CreateMediaWithIdentity(filename, mediaFolder, "Image");
 
                 WebClient wc = new WebClient();
-                MemoryStream memoryStream = new MemoryStream(wc.DownloadData(entry.WebformatURL));
+                MemoryStream memoryStream = new MemoryStream(wc.DownloadData(url.Replace("_640", "_960")));
 
                 Stream streamCopy = memoryStream;
                 media.SetValue("umbracoFile", filename, streamCopy);
@@ -159,6 +173,7 @@ namespace Umbraco.Pixabay.Controllers
             }
             catch (System.Exception ex)
             {
+                Logger.Error(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType, "Error ocurred while importing image.", ex);
                 throw ex;
             }
         }
@@ -182,6 +197,7 @@ namespace Umbraco.Pixabay.Controllers
             }
             catch (System.Exception ex)
             {
+                Logger.Error(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType, "Error ocurred while importing video.", ex);
                 throw ex;
             }
         }

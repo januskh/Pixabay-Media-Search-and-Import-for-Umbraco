@@ -10,7 +10,8 @@
                 <input type="radio" name="searchfor" id="rbVideos" ng-model="searchMode" ng-click="setSearchMode(1)" ng-checked="(searchMode == 1)" no-Dirty-Check/><label for="rbVideos">Videos</label>
             </div>
             <div>
-                <input type="text" placeholder="Search for eg. yellow flower" ng-model="searchTerm" ng-keyup="searchKeyUp()" class="search-field" no-Dirty-Check/> <input type="button" class="btn btn-success search-button" value="Search" ng-click="search()" />
+                <input type="text" placeholder="Search for eg. yellow flower" ng-model="searchTerm" ng-keyup="searchKeyUp()" class="search-field" no-Dirty-Check/> 
+                <input type="button" class="btn btn-success search-button" value="Search" ng-click="search()" />
             </div>
             <small><a class="advanced-option-toggle" ng-click="toogleAdvancedOptions()">Avanced options</a></small>
 
